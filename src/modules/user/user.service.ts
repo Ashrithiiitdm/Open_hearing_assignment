@@ -109,6 +109,17 @@ export const getUserById = async (user_id: string) => {
 
 export const deleteUser = async (user_id: string) => {
     try {
+        const isPresent = await prisma.user.findUnique({
+            where: {
+                id: user_id,
+                deletedAt: null,
+            },
+        });
+
+        if (!isPresent) {
+            return null;
+        }
+
         const deletedUser = await prisma.user.update({
             where: {
                 id: user_id,
