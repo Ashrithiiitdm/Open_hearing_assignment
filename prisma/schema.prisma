@@ -20,13 +20,14 @@ model User {
   email            String   @unique
   primaryMobile    String
   secondaryMobile  String?
-  aadhaar          String   @unique
+  aadhar          String   @unique
   pan              String   @unique
   dateOfBirth      DateTime
   placeOfBirth     String
   currentAddress   String
   permanentAddress String
 
+  isActive         Boolean  @default(true)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   deletedAt        DateTime?
