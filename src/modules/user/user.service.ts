@@ -36,6 +36,17 @@ export const updateUser = async (
     );
 
     try {
+        const isUser = await prisma.user.findUnique({
+            where: {
+                id: user_id,
+                deletedAt: null,
+            },
+        });
+
+        if (!isUser) {
+            return null;
+        }
+
         const updatedUser = await prisma.user.update({
             where: {
                 id: user_id,
