@@ -18,15 +18,19 @@ model User {
   id               String   @id @default(uuid())
   name             String
   email            String   @unique
-  primaryMobile    String
+  primaryMobile    String   @unique
   secondaryMobile  String?
   aadhar          String   @unique
+  aadharHash      String   @unique
   pan              String   @unique
+  panHash         String   @unique
   dateOfBirth      DateTime
   placeOfBirth     String
   currentAddress   String
   permanentAddress String
 
+
+  isActive        Boolean  @default(true)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   deletedAt        DateTime?

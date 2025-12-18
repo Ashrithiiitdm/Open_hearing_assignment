@@ -96,4 +96,14 @@ export const updateUserSchema = z
     })
     .refine((data) => Object.keys(data).length > 0, {
         message: "At least one field must be provided for update",
+    })
+    .refine((data) => !("aadhar" in data), {
+        message:
+            "Aadhar cannot be updated. Please contact support for corrections.",
+        path: ["aadhar"],
+    })
+    .refine((data) => !("pan" in data), {
+        message:
+            "PAN cannot be updated. Please contact support for corrections.",
+        path: ["pan"],
     });

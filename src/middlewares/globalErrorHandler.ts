@@ -9,7 +9,6 @@ export function globalErrorHandler(
     next: NextFunction
 ) {
     // Zod validation error
-
     if (err instanceof ZodError) {
         return res.status(400).json({
             success: false,
@@ -19,6 +18,21 @@ export function globalErrorHandler(
                 message: issue.message,
             })),
         });
+    }
+
+    // Custom error messages for duplicate checks
+    if (err instanceof Error) {
+        if (
+            err.message === "Email already exists" ||
+            err.message === "Primary mobile number already exists" ||
+            err.message === "Aadhar number already exists" ||
+            err.message === "PAN number already exists"
+        ) {
+            return res.status(409).json({
+                success: false,
+                message: err.message,
+            });
+        }
     }
 
     // Prisma unique constraint

@@ -31,3 +31,7 @@ export function decrypt(encryptedText: string) {
         decipher.update(encrypted, undefined, "utf8") + decipher.final("utf8")
     );
 }
+
+export function hash(text: string): string {
+    return crypto.createHash("sha256").update(text).digest("hex");
+}

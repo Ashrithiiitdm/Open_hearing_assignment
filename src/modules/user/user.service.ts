@@ -1,20 +1,61 @@
 import prisma from "../../prisma/client.js";
 import { z } from "zod";
 import { createUserSchema, updateUserSchema } from "./user.validation.js";
-import { encrypt } from "../../utils/encryption.js";
+import { encrypt, hash } from "../../utils/encryption.js";
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 
 export const createUser = async (newUser: CreateUserInput) => {
     try {
+        // Check for existing email
+        const existingEmail = await prisma.user.findUnique({
+            where: { email: newUser.email },
+        });
+        if (existingEmail) {
+            throw new Error("Email already exists");
+        }
+
+        // Check for existing primaryMobile
+        const existingMobile = await prisma.user.findUnique({
+            where: { primaryMobile: newUser.primaryMobile },
+        });
+        if (existingMobile) {
+            throw new Error("Primary mobile number already exists");
+        }
+
+        // Create hashes for duplicate detection
+        const aadharHash = hash(newUser.aadhar);
+        const panHash = hash(newUser.pan);
+
+        // Check for existing Aadhar hash
+        const existingAadhar = await prisma.user.findUnique({
+            where: { aadharHash },
+        });
+        if (existingAadhar) {
+            throw new Error("Aadhar number already exists");
+        }
+
+        // Check for existing PAN hash
+        const existingPan = await prisma.user.findUnique({
+            where: { panHash },
+        });
+        if (existingPan) {
+            throw new Error("PAN number already exists");
+        }
+
+        // Encrypt sensitive data
         const encryptedAadhar = encrypt(newUser.aadhar);
         const encryptedPan = encrypt(newUser.pan);
 
-        newUser.aadhar = encryptedAadhar;
-        newUser.pan = encryptedPan;
         const user = await prisma.user.create({
-            data: newUser,
+            data: {
+                ...newUser,
+                aadhar: encryptedAadhar,
+                aadharHash,
+                pan: encryptedPan,
+                panHash,
+            },
         });
 
         return user;
