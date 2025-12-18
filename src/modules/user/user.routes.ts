@@ -6,10 +6,12 @@ import {
     getUserByIdController,
     deleteUserController,
 } from "./user.controller.js";
+import { createAccountLimiter } from "../../middlewares/rateLimiter.js";
 
 const userRouter = Router();
 
-userRouter.post("/users", createUserController);
+// Apply stricter rate limiting to user creation
+userRouter.post("/users", createAccountLimiter, createUserController);
 userRouter.get("/users", getUsersController);
 userRouter.get("/users/:user_id", getUserByIdController);
 userRouter.patch("/users/:user_id", updateUserController);
