@@ -100,8 +100,7 @@ ENCRYPTION_KEY=your_64_character_hex_encryption_key_here
 # CORS Configuration (comma-separated list of allowed origins)
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 
-# Node Environment
-NODE_ENV=development
+
 ```
 
 ### Generating Encryption Key
