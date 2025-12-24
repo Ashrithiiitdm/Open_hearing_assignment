@@ -7,7 +7,7 @@
 import dotenv from 'dotenv';
 
 // Load test environment variables
-dotenv.config({ path: '.env.test' });
+dotenv.config({ path: '.env' });
 
 // Verify critical environment variables are loaded
 if (!process.env.ENCRYPTION_KEY) {
